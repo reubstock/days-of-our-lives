@@ -183,6 +183,17 @@
   .field input[type="number"] { width: 58px; }
   .field select { width: 92px; }
 
+  .age-col { display: flex; flex-direction: column; align-items: flex-start; gap: 2px; }
+  .attribution {
+    font-size: 9px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    opacity: 0.55;
+    margin-left: 36px; /* roughly under the input, past the "Age" label */
+  }
+  .attribution a { color: inherit; text-decoration: underline; }
+  .attribution a:hover { color: var(--ink); opacity: 1; }
+
   .readout {
     font-size: 11px;
     letter-spacing: 0.04em;
@@ -210,6 +221,40 @@
   }
   .swatch-lived { background: var(--lived); }
   .swatch-left { background: var(--remaining); }
+
+  /* Stats strip — three counts of things remaining */
+  .stats {
+    flex: 0 0 auto;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    border-top: 1px solid var(--rule);
+    border-bottom: 1px solid var(--rule);
+    padding: 6px 0;
+  }
+  .stat { text-align: center; min-width: 0; }
+  .stat-num {
+    font-size: clamp(20px, 4.4vw, 34px);
+    font-weight: 700;
+    color: var(--remaining);
+    font-variant-numeric: tabular-nums;
+    line-height: 1.05;
+    letter-spacing: 0.01em;
+  }
+  .stat-label {
+    font-size: 9px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    opacity: 0.7;
+    margin-top: 3px;
+  }
+  .stat-sub {
+    font-size: 8px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    opacity: 0.4;
+    margin-top: 1px;
+  }
 
   /* Grid — fills remaining space in BOTH dimensions (rectangles, not squares) */
   .grid-wrap {
@@ -268,9 +313,14 @@
 
     <section class="meta">
       <div class="controls">
-        <div class="field">
-          <label for="age">Age</label>
-          <input id="age" type="number" min="0" max="119" step="1" value="30">
+        <div class="age-col">
+          <div class="field">
+            <label for="age">Age</label>
+            <input id="age" type="number" min="0" max="119" step="1" value="30">
+          </div>
+          <div class="attribution">
+            Life Expectancy <a href="https://www.health.state.ny.us/health_care/medicaid/publications/docs/adm/06adm-5att8.pdf" target="_blank" rel="noopener noreferrer">via</a>
+          </div>
         </div>
         <div class="field">
           <label for="sex">Sex</label>
@@ -283,6 +333,24 @@
       <div class="readout" id="readout"></div>
     </section>
   </div>
+
+  <section class="stats">
+    <div class="stat">
+      <div class="stat-num" id="fartsNum">—</div>
+      <div class="stat-label">Farts Left</div>
+      <div class="stat-sub">10 / day</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num" id="sexNum">—</div>
+      <div class="stat-label">Sex Left</div>
+      <div class="stat-sub" id="sexSub">avg by age</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num" id="dreamsNum">—</div>
+      <div class="stat-label">Dreams Left</div>
+      <div class="stat-sub">5 / night</div>
+    </div>
+  </section>
 
   <section class="grid-wrap" id="gridWrap">
     <div class="grid" id="grid" aria-label="Weeks of life"></div>
@@ -330,6 +398,33 @@
   const todayEl = document.getElementById('today');
   const counterEl = document.getElementById('counter');
   const sendBtn = document.getElementById('sendBtn');
+  const fartsNumEl = document.getElementById('fartsNum');
+  const dreamsNumEl = document.getElementById('dreamsNum');
+  const sexNumEl = document.getElementById('sexNum');
+  const sexSubEl = document.getElementById('sexSub');
+
+  // Per-year sex frequency by age bracket (Kinsey-ish public averages):
+  //   18–29: ~2.5/wk = 130/yr
+  //   30–49: ~1.5/wk =  78/yr
+  //   50+  : ~3/mo   =  36/yr
+  //   <18  : 0 (not counted)
+  function sexFreqPerYear(a) {
+    if (a < 18) return 0;
+    if (a < 30) return 2.5 * 52;
+    if (a < 50) return 1.5 * 52;
+    return 3 * 12;
+  }
+  function sexLeft(currentAge, remainingYears) {
+    let total = 0;
+    let a = currentAge;
+    let end = currentAge + remainingYears;
+    while (a < end) {
+      const chunk = Math.min(1, end - a);
+      total += sexFreqPerYear(Math.floor(a)) * chunk;
+      a += chunk;
+    }
+    return Math.round(total);
+  }
   const MAX_CHARS = 180;
   const RECIPIENT = 'reubstock@gmail.com';
 
@@ -352,6 +447,17 @@
     readoutEl.innerHTML =
       `<span class="legend"><span><i class="swatch-lived"></i>lived</span><span><i class="swatch-left"></i>left</span></span> ` +
       `&nbsp; <span class="num">${weeksLeft.toLocaleString()}</span> weeks (<span class="num">${remainingYears.toFixed(1)}</span> yrs) to go`;
+
+    // Stats: counts based on time remaining
+    const daysLeft = remainingYears * 365.25;
+    fartsNumEl.textContent = Math.round(daysLeft * 10).toLocaleString();
+    dreamsNumEl.textContent = Math.round(daysLeft * 5).toLocaleString();
+    sexNumEl.textContent = sexLeft(age, remainingYears).toLocaleString();
+    sexSubEl.textContent =
+      age < 18 ? 'starts at 18' :
+      age < 30 ? '~2.5 / week' :
+      age < 50 ? '~1.5 / week' :
+                 '~3 / month';
 
     const filledWeeks = weeksLived + weeksLeft;
     const cells = new Array(totalWeeks);
