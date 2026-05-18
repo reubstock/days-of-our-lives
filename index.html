@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>CARPE DIEM</title>
 <style>
   :root {
@@ -10,6 +10,7 @@
     --ink: #000000;
     --lived: #cfcfcf;
     --rule: #000000;
+    --gap: 6px;
   }
   * { box-sizing: border-box; }
   html, body {
@@ -19,245 +20,264 @@
     color: var(--ink);
     font-family: "Times New Roman", Times, serif;
     -webkit-font-smoothing: antialiased;
+    height: 100%;
+    overflow: hidden;
+    overscroll-behavior: none;
+  }
+  body {
+    height: 100dvh;
   }
   .page {
-    max-width: 960px;
+    height: 100dvh;
+    max-width: 1180px;
     margin: 0 auto;
-    padding: 28px 24px 80px;
+    padding: 10px 14px env(safe-area-inset-bottom) 14px;
+    display: flex;
+    flex-direction: column;
+    gap: var(--gap);
   }
 
   /* Prompt box at top */
   .prompt {
-    border: 1px solid var(--rule);
-    padding: 18px 20px 16px;
-    margin-bottom: 28px;
+    border: 3px double var(--rule);
+    padding: 0;
+    flex: 0 0 auto;
+    background: var(--bg);
   }
   .prompt-header {
     display: flex;
     justify-content: space-between;
-    align-items: baseline;
-    margin-bottom: 8px;
-    gap: 12px;
+    align-items: center;
+    gap: 10px;
+    background: var(--ink);
+    color: var(--bg);
+    padding: 5px 10px;
   }
   .prompt-label {
-    font-size: 13px;
-    letter-spacing: 0.18em;
+    font-size: 11px;
+    letter-spacing: 0.22em;
     text-transform: uppercase;
-    opacity: 0.7;
+    font-weight: 700;
   }
   .counter {
-    font-size: 12px;
+    font-size: 10px;
     letter-spacing: 0.1em;
     font-variant-numeric: tabular-nums;
-    opacity: 0.55;
+    opacity: 0.7;
   }
-  .counter.warn { opacity: 1; color: #000; font-weight: 700; }
+  .counter.warn { opacity: 1; font-weight: 700; }
+  .prompt-row {
+    display: flex;
+    align-items: stretch;
+    gap: 0;
+    padding: 8px 10px;
+    border-top: 1px solid var(--rule);
+  }
   .prompt textarea {
-    width: 100%;
+    flex: 1;
     border: none;
     outline: none;
     resize: none;
     font-family: inherit;
-    font-size: 28px;
-    line-height: 1.25;
+    font-size: 17px;  /* >=16 prevents iOS zoom */
+    line-height: 1.3;
     background: transparent;
     color: var(--ink);
-    min-height: 1.4em;
-    padding: 0;
+    height: 24px;     /* ~1 line at load */
+    max-height: 84px; /* ~3-4 lines max */
+    padding: 0 10px 0 0;
+    overflow-y: auto;
   }
   .prompt textarea::placeholder {
     color: #bdbdbd;
     font-style: italic;
   }
-  .prompt-footer {
-    display: flex;
-    justify-content: flex-end;
-    margin-top: 12px;
-  }
   .send-btn {
     font-family: inherit;
-    font-size: 12px;
+    font-size: 10px;
     letter-spacing: 0.22em;
     text-transform: uppercase;
-    padding: 8px 18px;
+    font-weight: 700;
+    padding: 0 12px;
     background: var(--ink);
     color: var(--bg);
-    border: 1px solid var(--ink);
+    border: none;
     cursor: pointer;
     text-decoration: none;
-    display: inline-block;
+    flex: 0 0 auto;
+    line-height: 1;
+    display: inline-flex;
+    align-items: center;
+    align-self: stretch;
+    margin: -8px -10px -8px 0;
   }
-  .send-btn:hover { background: var(--bg); color: var(--ink); }
   .send-btn[aria-disabled="true"] {
-    background: var(--bg);
-    color: #bdbdbd;
-    border-color: #bdbdbd;
+    background: #e6e6e6;
+    color: #999;
     cursor: not-allowed;
     pointer-events: none;
   }
 
-  /* Title */
-  h1 {
-    font-size: 56px;
-    letter-spacing: 0.22em;
+  /* Title row */
+  .title-row {
+    flex: 0 0 auto;
     text-align: center;
-    margin: 28px 0 4px;
-    font-weight: 700;
+    padding: 2px 0 0;
   }
-  .tagline {
-    text-align: center;
-    font-style: italic;
-    opacity: 0.65;
-    margin-bottom: 28px;
-    font-size: 15px;
+  h1 {
+    font-size: clamp(28px, 8vw, 44px);
+    letter-spacing: 0.24em;
+    margin: 0;
+    font-weight: 700;
+    line-height: 1;
+  }
+  .h1-rule {
+    height: 2px;
+    background: var(--ink);
+    margin: 6px 0 0;
   }
 
-  /* Controls */
+  /* Controls + readout, single compact row */
+  .meta {
+    flex: 0 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
   .controls {
     display: flex;
-    gap: 24px;
-    align-items: flex-end;
-    justify-content: center;
-    flex-wrap: wrap;
-    margin-bottom: 24px;
+    gap: 8px;
+    align-items: center;
   }
-  .field { display: flex; flex-direction: column; gap: 6px; }
+  .field { display: flex; align-items: center; gap: 5px; }
   .field label {
-    font-size: 11px;
-    letter-spacing: 0.2em;
+    font-size: 10px;
+    letter-spacing: 0.18em;
     text-transform: uppercase;
     opacity: 0.6;
   }
   .field input[type="number"],
   .field select {
     font-family: inherit;
-    font-size: 22px;
-    padding: 6px 10px;
+    font-size: 14px;
+    padding: 3px 6px;
     border: 1px solid var(--rule);
     background: var(--bg);
     color: var(--ink);
-    width: 110px;
   }
-  .field select { width: 140px; }
+  .field input[type="number"] { width: 58px; }
+  .field select { width: 92px; }
 
-  /* Readout */
   .readout {
-    text-align: center;
-    margin: 8px 0 22px;
-    font-size: 15px;
-    min-height: 1.4em;
+    font-size: 11px;
+    letter-spacing: 0.04em;
+    opacity: 0.85;
+    text-align: right;
+    flex: 1 1 auto;
+    min-width: 0;
   }
   .readout .num { font-weight: 700; }
   .legend {
     display: inline-flex;
-    gap: 18px;
+    gap: 10px;
     align-items: center;
-    margin-top: 6px;
-    font-size: 12px;
-    letter-spacing: 0.08em;
+    font-size: 10px;
+    letter-spacing: 0.1em;
     text-transform: uppercase;
-    opacity: 0.75;
+    opacity: 0.7;
   }
   .legend i {
     display: inline-block;
-    width: 14px;
-    height: 14px;
-    margin-right: 6px;
-    vertical-align: -2px;
+    width: 9px;
+    height: 9px;
+    margin-right: 4px;
+    vertical-align: -1px;
   }
   .swatch-lived { background: var(--lived); }
   .swatch-left { background: var(--ink); }
 
-  /* Grid */
+  /* Grid — fills remaining space in BOTH dimensions (rectangles, not squares) */
   .grid-wrap {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow: hidden;
     border-top: 1px solid var(--rule);
-    padding-top: 22px;
+    padding-top: 6px;
   }
   .grid {
     display: grid;
     grid-template-columns: repeat(52, 1fr);
-    gap: 2px;
     width: 100%;
+    height: 100%;
+    gap: 1px;
   }
-  .cell {
-    width: 100%;
-    aspect-ratio: 1 / 1;
-    background: var(--bg);
-  }
+  .cell { background: var(--bg); min-width: 0; min-height: 0; }
   .cell.lived { background: var(--lived); }
   .cell.left { background: var(--ink); }
 
-  /* Axis caption */
-  .axis {
-    display: flex;
-    justify-content: space-between;
-    font-size: 11px;
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    opacity: 0.55;
-    margin-top: 10px;
+  /* Very small phones */
+  @media (max-height: 640px) {
+    :root { --gap: 4px; }
+    .page { padding: 6px 10px; }
+    .prompt { padding: 6px 8px; }
+    h1 { font-size: clamp(18px, 6vw, 28px); }
+    .grid-wrap { padding-top: 4px; }
   }
-
-  @media (max-width: 640px) {
-    h1 { font-size: 38px; letter-spacing: 0.18em; }
-    .prompt textarea { font-size: 22px; }
-    .grid { gap: 1px; }
+  @media (min-width: 700px) {
+    .prompt { padding: 12px 14px; }
+    .prompt-label, .counter { font-size: 11px; }
+    .prompt textarea { font-size: 18px; height: 24px; }
+    .field input[type="number"], .field select { font-size: 16px; padding: 5px 8px; }
+    .readout { font-size: 12px; }
   }
 </style>
 </head>
 <body>
 <main class="page">
 
+  <div class="title-row">
+    <h1>CARPE DIEM</h1>
+    <div class="h1-rule"></div>
+  </div>
+
   <section class="prompt">
     <div class="prompt-header">
       <div class="prompt-label">What will you do today?</div>
       <div class="counter" id="counter">0 / 180</div>
     </div>
-    <textarea id="today" rows="1" maxlength="180" placeholder="Seize it…" spellcheck="false"></textarea>
-    <div class="prompt-footer">
+    <div class="prompt-row">
+      <textarea id="today" rows="1" maxlength="180" placeholder="Seize it…" spellcheck="false"></textarea>
       <a id="sendBtn" class="send-btn" aria-disabled="true" href="#">Send</a>
     </div>
   </section>
 
-  <h1>CARPE DIEM</h1>
-  <div class="tagline">one rectangle = one week</div>
-
-  <section class="controls">
-    <div class="field">
-      <label for="age">Age</label>
-      <input id="age" type="number" min="0" max="119" step="1" value="30">
+  <section class="meta">
+    <div class="controls">
+      <div class="field">
+        <label for="age">Age</label>
+        <input id="age" type="number" min="0" max="119" step="1" value="30">
+      </div>
+      <div class="field">
+        <label for="sex">Sex</label>
+        <select id="sex">
+          <option value="male">Male</option>
+          <option value="female" selected>Female</option>
+        </select>
+      </div>
     </div>
-    <div class="field">
-      <label for="sex">Sex</label>
-      <select id="sex">
-        <option value="male">Male</option>
-        <option value="female" selected>Female</option>
-      </select>
-    </div>
+    <div class="readout" id="readout"></div>
   </section>
 
-  <div class="readout" id="readout"></div>
-  <div style="text-align:center;">
-    <span class="legend">
-      <span><i class="swatch-lived"></i>lived</span>
-      <span><i class="swatch-left"></i>remaining</span>
-    </span>
-  </div>
-
-  <section class="grid-wrap">
+  <section class="grid-wrap" id="gridWrap">
     <div class="grid" id="grid" aria-label="Weeks of life"></div>
-    <div class="axis">
-      <span>← birth</span>
-      <span>each row = 1 year (52 weeks)</span>
-      <span>death →</span>
-    </div>
   </section>
 
 </main>
 
 <script>
   // NY State Medicaid 06 ADM-5 Attachment VIII — Life Expectancy Table
-  // index = age, value = remaining life expectancy in years
   const LE_MALE = [
     74.14,73.70,72.74,71.77,70.79,69.81,68.82,67.83,66.84,65.85,
     64.86,63.87,62.88,61.89,60.91,59.93,58.97,58.02,57.07,56.14,
@@ -287,7 +307,7 @@
      1.16, 1.07, 0.99, 0.91, 0.84, 0.77, 0.71, 0.66, 0.61, 0.56
   ];
 
-  const WEEKS_PER_YEAR = 52; // visual row = 52 cells, one per week-of-year
+  const COLS = 52;
 
   const ageEl = document.getElementById('age');
   const sexEl = document.getElementById('sex');
@@ -310,18 +330,15 @@
     const table = sexEl.value === 'male' ? LE_MALE : LE_FEMALE;
     const remainingYears = table[age];
     const totalYears = age + remainingYears;
-    const totalRows = Math.ceil(totalYears); // each row = one full year
-    const totalWeeks = totalRows * WEEKS_PER_YEAR;
-    const weeksLived = Math.round(age * WEEKS_PER_YEAR);
-    const weeksLeft = Math.max(0, Math.round(totalYears * WEEKS_PER_YEAR) - weeksLived);
+    const totalRows = Math.ceil(totalYears);
+    const totalWeeks = totalRows * COLS;
+    const weeksLived = Math.round(age * COLS);
+    const weeksLeft = Math.max(0, Math.round(totalYears * COLS) - weeksLived);
 
-    // Readout
     readoutEl.innerHTML =
-      `Projected lifespan <span class="num">${totalYears.toFixed(2)}</span> years &nbsp;·&nbsp; ` +
-      `<span class="num">${weeksLived.toLocaleString()}</span> weeks lived &nbsp;·&nbsp; ` +
-      `<span class="num">${weeksLeft.toLocaleString()}</span> weeks remaining`;
+      `<span class="legend"><span><i class="swatch-lived"></i>lived</span><span><i class="swatch-left"></i>left</span></span> ` +
+      `&nbsp; <span class="num">${weeksLeft.toLocaleString()}</span> weeks (<span class="num">${remainingYears.toFixed(1)}</span> yrs) to go`;
 
-    // Grid
     const filledWeeks = weeksLived + weeksLeft;
     const cells = new Array(totalWeeks);
     for (let i = 0; i < totalWeeks; i++) {
@@ -330,20 +347,13 @@
       else if (i < filledWeeks) cls += ' left';
       cells[i] = `<div class="${cls}"></div>`;
     }
+    gridEl.style.gridTemplateRows = `repeat(${totalRows}, 1fr)`;
     gridEl.innerHTML = cells.join('');
   }
 
-  // Auto-grow the prompt textarea
-  function autogrow() {
-    todayEl.style.height = 'auto';
-    todayEl.style.height = todayEl.scrollHeight + 'px';
-  }
-
   function updatePrompt() {
-    // maxlength handles the hard cap; this keeps the UI in sync
     const text = todayEl.value.slice(0, MAX_CHARS);
     if (text.length !== todayEl.value.length) todayEl.value = text;
-
     const len = text.length;
     counterEl.textContent = `${len} / ${MAX_CHARS}`;
     counterEl.classList.toggle('warn', len >= MAX_CHARS - 20);
@@ -356,17 +366,14 @@
     }
     sendBtn.setAttribute('aria-disabled', 'false');
     const today = new Date().toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' });
-    const subject = `Carpe Diem — ${today}`;
-    const body = trimmed;
-    sendBtn.href = `mailto:${RECIPIENT}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    sendBtn.href = `mailto:${RECIPIENT}?subject=${encodeURIComponent('Carpe Diem — ' + today)}&body=${encodeURIComponent(trimmed)}`;
   }
 
   ageEl.addEventListener('input', render);
   sexEl.addEventListener('change', render);
-  todayEl.addEventListener('input', () => { autogrow(); updatePrompt(); });
+  todayEl.addEventListener('input', updatePrompt);
 
   render();
-  autogrow();
   updatePrompt();
 </script>
 </body>
