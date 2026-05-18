@@ -8,7 +8,8 @@
   :root {
     --bg: #ffffff;
     --ink: #000000;
-    --lived: #cfcfcf;
+    --lived: #000000;       /* spent — heavy */
+    --remaining: #c9a227;   /* gold — yet to come */
     --rule: #000000;
     --gap: 6px;
   }
@@ -37,11 +38,22 @@
     gap: var(--gap);
   }
 
-  /* Prompt box at top */
+  /* Top row: prompt (1/3) + meta (2/3) on desktop */
+  .top-row {
+    flex: 0 0 auto;
+    display: flex;
+    align-items: stretch;
+    gap: 14px;
+    flex-wrap: wrap;
+  }
+
+  /* Prompt box */
   .prompt {
     border: 3px double var(--rule);
     padding: 0;
-    flex: 0 0 auto;
+    flex: 0 1 33%;
+    min-width: 240px;
+    align-self: flex-start;
     background: var(--bg);
   }
   .prompt-header {
@@ -137,14 +149,15 @@
     margin: 6px 0 0;
   }
 
-  /* Controls + readout, single compact row */
+  /* Controls + readout — sits in the right 2/3 of the top row on desktop */
   .meta {
-    flex: 0 0 auto;
+    flex: 1 1 auto;
     display: flex;
     align-items: center;
     justify-content: space-between;
     gap: 10px;
     flex-wrap: wrap;
+    min-width: 0;
   }
   .controls {
     display: flex;
@@ -196,7 +209,7 @@
     vertical-align: -1px;
   }
   .swatch-lived { background: var(--lived); }
-  .swatch-left { background: var(--ink); }
+  .swatch-left { background: var(--remaining); }
 
   /* Grid — fills remaining space in BOTH dimensions (rectangles, not squares) */
   .grid-wrap {
@@ -215,7 +228,7 @@
   }
   .cell { background: var(--bg); min-width: 0; min-height: 0; }
   .cell.lived { background: var(--lived); }
-  .cell.left { background: var(--ink); }
+  .cell.left { background: var(--remaining); }
 
   /* Very small phones */
   @media (max-height: 640px) {
@@ -239,36 +252,37 @@
 
   <div class="title-row">
     <h1>CARPE DIEM</h1>
-    <div class="h1-rule"></div>
   </div>
 
-  <section class="prompt">
-    <div class="prompt-header">
-      <div class="prompt-label">What will you do today?</div>
-      <div class="counter" id="counter">0 / 180</div>
-    </div>
-    <div class="prompt-row">
-      <textarea id="today" rows="1" maxlength="180" placeholder="Seize it…" spellcheck="false"></textarea>
-      <a id="sendBtn" class="send-btn" aria-disabled="true" href="#">Send</a>
-    </div>
-  </section>
+  <div class="top-row">
+    <section class="prompt">
+      <div class="prompt-header">
+        <div class="prompt-label">What will you do today?</div>
+        <div class="counter" id="counter">0 / 180</div>
+      </div>
+      <div class="prompt-row">
+        <textarea id="today" rows="1" maxlength="180" placeholder="Seize it…" spellcheck="false"></textarea>
+        <a id="sendBtn" class="send-btn" aria-disabled="true" href="#">Send</a>
+      </div>
+    </section>
 
-  <section class="meta">
-    <div class="controls">
-      <div class="field">
-        <label for="age">Age</label>
-        <input id="age" type="number" min="0" max="119" step="1" value="30">
+    <section class="meta">
+      <div class="controls">
+        <div class="field">
+          <label for="age">Age</label>
+          <input id="age" type="number" min="0" max="119" step="1" value="30">
+        </div>
+        <div class="field">
+          <label for="sex">Sex</label>
+          <select id="sex">
+            <option value="male">Male</option>
+            <option value="female" selected>Female</option>
+          </select>
+        </div>
       </div>
-      <div class="field">
-        <label for="sex">Sex</label>
-        <select id="sex">
-          <option value="male">Male</option>
-          <option value="female" selected>Female</option>
-        </select>
-      </div>
-    </div>
-    <div class="readout" id="readout"></div>
-  </section>
+      <div class="readout" id="readout"></div>
+    </section>
+  </div>
 
   <section class="grid-wrap" id="gridWrap">
     <div class="grid" id="grid" aria-label="Weeks of life"></div>
