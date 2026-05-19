@@ -39,51 +39,52 @@
     height: 100dvh;
     max-width: 1180px;
     margin: 0 auto;
-    padding: 14px 18px env(safe-area-inset-bottom) 18px;
+    padding: 14px 18px calc(env(safe-area-inset-bottom) + clamp(56px, 12vh, 120px)) 18px;
     display: flex;
     flex-direction: column;
     gap: var(--gap);
   }
 
-  /* Title row */
+  /* Title row — Carpe Diem left, prompt right */
   .title-row {
     flex: 0 0 auto;
     display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 16px;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 18px;
+    flex-wrap: wrap;
     padding: 2px 0 0;
-  }
-  .hourglass {
-    height: clamp(30px, 8vw, 46px);
-    width: auto;
-    flex: 0 0 auto;
-    display: block;
   }
   h1 {
     font-family: 'Fraunces', 'Inter', serif;
-    font-size: clamp(30px, 8.4vw, 48px);
-    letter-spacing: 0.06em;
+    font-size: clamp(30px, 8.4vw, 52px);
+    letter-spacing: 0.04em;
     margin: 0;
     font-weight: 500;
     line-height: 1;
     color: var(--ink);
+    text-align: left;
+    flex: 0 0 auto;
   }
 
-  /* Top row: prompt (1/3) + meta (2/3) */
-  .top-row {
+  /* Hourglass row — alone, centered, below the title */
+  .hourglass-row {
     flex: 0 0 auto;
     display: flex;
-    align-items: stretch;
-    gap: 18px;
-    flex-wrap: wrap;
+    justify-content: center;
+    padding: 2px 0;
+  }
+  .hourglass {
+    height: clamp(34px, 9vw, 52px);
+    width: auto;
+    flex: 0 0 auto;
+    display: block;
   }
 
-  /* Prompt card — soft paper, no inverse header, no double border */
+  /* Prompt card — soft paper, sits right of the title */
   .prompt {
-    flex: 0 1 34%;
-    min-width: 250px;
-    align-self: flex-start;
+    flex: 0 1 380px;
+    min-width: 260px;
     background: var(--paper);
     border: 1px solid var(--rule);
     border-radius: 4px;
@@ -163,9 +164,9 @@
     pointer-events: none;
   }
 
-  /* Controls + readout — sits in the right 2/3 of the top row */
+  /* Controls + readout — own row, below the hourglass */
   .meta {
-    flex: 1 1 auto;
+    flex: 0 0 auto;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -221,23 +222,35 @@
   }
   .readout .num { color: var(--ink); font-weight: 600; font-variant-numeric: tabular-nums; }
 
-  .legend {
-    display: inline-flex;
-    gap: 16px;
-    align-items: center;
-    font-size: 12px;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    font-weight: 500;
-    color: var(--ink-soft);
+  /* Grid legend — white chips, left-aligned, just above the grid */
+  .grid-legend {
+    flex: 0 0 auto;
+    display: flex;
+    gap: 8px;
+    justify-content: flex-start;
+    padding: 2px 0 0;
   }
-  .legend i {
+  .legend-chip {
+    background: #fff;
+    border: 1px solid var(--rule);
+    padding: 4px 10px 4px 8px;
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    font-weight: 600;
+    color: var(--ink);
+    border-radius: 2px;
+    line-height: 1;
+  }
+  .legend-chip i {
     display: inline-block;
     width: 11px;
     height: 11px;
-    margin-right: 6px;
-    vertical-align: -1px;
     border-radius: 1px;
+    flex: 0 0 auto;
   }
   .swatch-lived { background: var(--lived); }
   .swatch-left { background: var(--remaining); }
@@ -277,9 +290,25 @@
     margin-top: 2px;
     font-style: italic;
   }
-  #fartsNum  { color: var(--honey); }
-  #sexNum    { color: var(--remaining); }
-  #dreamsNum { color: var(--sage); }
+  #fartsNum  { color: #8b4513; }  /* brown */
+  #sexNum    { color: #ec4899; }  /* pink  */
+  #dreamsNum {
+    background: linear-gradient(90deg,
+      #ff2d55, #ff8c00, #ffcc00, #34c759, #00b8d4, #4361ee, #b10dc9, #ff2d55);
+    background-size: 200% 100%;
+    -webkit-background-clip: text;
+            background-clip: text;
+    -webkit-text-fill-color: transparent;
+            color: transparent;
+    animation: rainbow 6s linear infinite;
+  }
+  @keyframes rainbow {
+    from { background-position: 0% 0; }
+    to   { background-position: -200% 0; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    #dreamsNum { animation: none; }
+  }
 
   /* Grid — fills remaining space in both dimensions */
   .grid-wrap {
@@ -312,20 +341,7 @@
 <main class="page">
 
   <div class="title-row">
-    <svg class="hourglass" viewBox="0 0 40 60" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-      <rect x="0" y="0" width="40" height="3" fill="#2d2924"/>
-      <rect x="0" y="57" width="40" height="3" fill="#2d2924"/>
-      <path d="M 4 3 L 36 3 L 22 30 L 36 57 L 4 57 L 18 30 Z"
-            fill="none" stroke="#2d2924" stroke-width="1.6" stroke-linejoin="miter"/>
-      <!-- top: sand still to fall = REMAINING -->
-      <path d="M 11 17 L 29 17 L 22 30 L 18 30 Z" fill="#d97757"/>
-      <!-- bottom: sand already fallen = LIVED -->
-      <path d="M 11 43 L 29 43 L 36 57 L 4 57 Z" fill="#2d2924"/>
-    </svg>
     <h1>Carpe Diem</h1>
-  </div>
-
-  <div class="top-row">
     <section class="prompt">
       <div class="prompt-header">
         <div class="prompt-label">What will you do today?</div>
@@ -336,29 +352,42 @@
         <a id="sendBtn" class="send-btn" aria-disabled="true" href="#">Send</a>
       </div>
     </section>
+  </div>
 
-    <section class="meta">
-      <div class="controls">
-        <div class="age-col">
-          <div class="field">
-            <label for="age">Age</label>
-            <input id="age" type="number" min="0" max="119" step="1" value="30">
-          </div>
-          <div class="attribution">
-            Life Expectancy calculated by <a href="https://www.health.state.ny.us/health_care/medicaid/publications/docs/adm/06adm-5att8.pdf" target="_blank" rel="noopener noreferrer">NY Health Dept</a>
-          </div>
-        </div>
+  <div class="hourglass-row">
+    <svg class="hourglass" viewBox="0 0 40 60" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <rect x="0" y="0" width="40" height="3" fill="#2d2924"/>
+      <rect x="0" y="57" width="40" height="3" fill="#2d2924"/>
+      <path d="M 4 3 L 36 3 L 22 30 L 36 57 L 4 57 L 18 30 Z"
+            fill="none" stroke="#2d2924" stroke-width="1.6" stroke-linejoin="miter"/>
+      <!-- top: sand still to fall = REMAINING -->
+      <path d="M 11 17 L 29 17 L 22 30 L 18 30 Z" fill="#d97757"/>
+      <!-- bottom: sand already fallen = LIVED -->
+      <path d="M 11 43 L 29 43 L 36 57 L 4 57 Z" fill="#2d2924"/>
+    </svg>
+  </div>
+
+  <section class="meta">
+    <div class="controls">
+      <div class="age-col">
         <div class="field">
-          <label for="sex">Sex</label>
-          <select id="sex">
-            <option value="male">Male</option>
-            <option value="female" selected>Female</option>
-          </select>
+          <label for="age">Age</label>
+          <input id="age" type="number" min="0" max="119" step="1" value="30">
+        </div>
+        <div class="attribution">
+          Life Expectancy calculated by <a href="https://www.health.state.ny.us/health_care/medicaid/publications/docs/adm/06adm-5att8.pdf" target="_blank" rel="noopener noreferrer">NY Health Dept</a>
         </div>
       </div>
-      <div class="readout" id="readout"></div>
-    </section>
-  </div>
+      <div class="field">
+        <label for="sex">Sex</label>
+        <select id="sex">
+          <option value="male">Male</option>
+          <option value="female" selected>Female</option>
+        </select>
+      </div>
+    </div>
+    <div class="readout" id="readout"></div>
+  </section>
 
   <section class="stats">
     <div class="stat">
@@ -377,6 +406,11 @@
       <div class="stat-sub">5 / night</div>
     </div>
   </section>
+
+  <div class="grid-legend">
+    <span class="legend-chip"><i class="swatch-lived"></i>lived</span>
+    <span class="legend-chip"><i class="swatch-left"></i>left</span>
+  </div>
 
   <section class="grid-wrap" id="gridWrap">
     <div class="grid" id="grid" aria-label="Weeks of life"></div>
@@ -466,8 +500,8 @@
     const weeksLeft = Math.max(0, Math.round(totalYears * COLS) - weeksLived);
 
     readoutEl.innerHTML =
-      `<span class="legend"><span><i class="swatch-lived"></i>lived</span><span><i class="swatch-left"></i>left</span></span> ` +
-      `&nbsp; <span class="num">${weeksLeft.toLocaleString()}</span> weeks (<span class="num">${remainingYears.toFixed(1)}</span> yrs) to go`;
+      `<span class="num">${weeksLeft.toLocaleString()}</span> weeks ` +
+      `(<span class="num">${remainingYears.toFixed(1)}</span> yrs) to go`;
 
     const daysLeft = remainingYears * 365.25;
     fartsNumEl.textContent = Math.round(daysLeft * 10).toLocaleString();
