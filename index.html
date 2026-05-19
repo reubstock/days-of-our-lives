@@ -241,9 +241,25 @@
     line-height: 1.05;
     letter-spacing: 0.01em;
   }
-  #fartsNum  { color: #d62828; }  /* red   */
-  #sexNum    { color: #2e7d32; }  /* green */
-  #dreamsNum { color: #1e40af; }  /* blue  */
+  #fartsNum  { color: #8b4513; }  /* brown */
+  #sexNum    { color: #d62828; }  /* red */
+  #dreamsNum {
+    background: linear-gradient(90deg,
+      #ff2d55, #ff8c00, #ffcc00, #34c759, #00b8d4, #4361ee, #b10dc9, #ff2d55);
+    background-size: 200% 100%;
+    -webkit-background-clip: text;
+            background-clip: text;
+    -webkit-text-fill-color: transparent;
+            color: transparent;
+    animation: rainbow 6s linear infinite;
+  }
+  @keyframes rainbow {
+    from { background-position: 0% 0; }
+    to   { background-position: -200% 0; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    #dreamsNum { animation: none; }
+  }
   .stat-label {
     font-size: 9px;
     letter-spacing: 0.22em;
