@@ -15,7 +15,7 @@
     --ink-soft:   #7a716b;   /* warm muted ink */
     --rule:       #d6cdba;   /* soft warm hairline */
     --lived:      #2d2924;   /* heavy warm ink for spent weeks */
-    --remaining:  #d97757;   /* terracotta — yet to come */
+    --remaining:  #eab308;   /* yellow — yet to come */
     --honey:      #c89752;   /* warm honey gold */
     --sage:       #7a9b94;   /* muted sage / teal */
     --gap: 10px;
@@ -45,14 +45,13 @@
     gap: var(--gap);
   }
 
-  /* Title row — Carpe Diem left, prompt right */
+  /* Title row — Carpe Diem left, hourglass to its right */
   .title-row {
     flex: 0 0 auto;
     display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
+    justify-content: flex-start;
+    align-items: center;
     gap: 18px;
-    flex-wrap: wrap;
     padding: 2px 0 0;
   }
   h1 {
@@ -66,25 +65,19 @@
     text-align: left;
     flex: 0 0 auto;
   }
-
-  /* Hourglass row — alone, centered, below the title */
-  .hourglass-row {
-    flex: 0 0 auto;
-    display: flex;
-    justify-content: center;
-    padding: 2px 0;
-  }
   .hourglass {
-    height: clamp(34px, 9vw, 52px);
+    height: clamp(30px, 8vw, 50px);
     width: auto;
     flex: 0 0 auto;
     display: block;
   }
 
-  /* Prompt card — soft paper, sits right of the title */
+  /* Prompt card — soft paper, sits on its own row under the title */
   .prompt {
-    flex: 0 1 380px;
-    min-width: 260px;
+    flex: 0 0 auto;
+    width: 100%;
+    max-width: 460px;
+    align-self: flex-start;
     background: var(--paper);
     border: 1px solid var(--rule);
     border-radius: 4px;
@@ -216,7 +209,7 @@
   .readout {
     font-size: 12px;
     color: var(--ink-soft);
-    text-align: right;
+    text-align: left;
     flex: 1 1 auto;
     min-width: 0;
   }
@@ -342,32 +335,31 @@
 
   <div class="title-row">
     <h1>Carpe Diem</h1>
-    <section class="prompt">
-      <div class="prompt-header">
-        <div class="prompt-label">What will you do today?</div>
-        <div class="counter" id="counter">0 / 180</div>
-      </div>
-      <div class="prompt-row">
-        <textarea id="today" rows="1" maxlength="180" placeholder="seize it…" spellcheck="false"></textarea>
-        <a id="sendBtn" class="send-btn" aria-disabled="true" href="#">Send</a>
-      </div>
-    </section>
-  </div>
-
-  <div class="hourglass-row">
     <svg class="hourglass" viewBox="0 0 40 60" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
       <rect x="0" y="0" width="40" height="3" fill="#2d2924"/>
       <rect x="0" y="57" width="40" height="3" fill="#2d2924"/>
       <path d="M 4 3 L 36 3 L 22 30 L 36 57 L 4 57 L 18 30 Z"
             fill="none" stroke="#2d2924" stroke-width="1.6" stroke-linejoin="miter"/>
       <!-- top: sand still to fall = REMAINING -->
-      <path d="M 11 17 L 29 17 L 22 30 L 18 30 Z" fill="#d97757"/>
+      <path d="M 11 17 L 29 17 L 22 30 L 18 30 Z" fill="#eab308"/>
       <!-- bottom: sand already fallen = LIVED -->
       <path d="M 11 43 L 29 43 L 36 57 L 4 57 Z" fill="#2d2924"/>
     </svg>
   </div>
 
+  <section class="prompt">
+    <div class="prompt-header">
+      <div class="prompt-label">What will you do today?</div>
+      <div class="counter" id="counter">0 / 180</div>
+    </div>
+    <div class="prompt-row">
+      <textarea id="today" rows="1" maxlength="180" placeholder="seize it…" spellcheck="false"></textarea>
+      <a id="sendBtn" class="send-btn" aria-disabled="true" href="#">Send</a>
+    </div>
+  </section>
+
   <section class="meta">
+    <div class="readout" id="readout"></div>
     <div class="controls">
       <div class="age-col">
         <div class="field">
@@ -386,7 +378,6 @@
         </select>
       </div>
     </div>
-    <div class="readout" id="readout"></div>
   </section>
 
   <section class="stats">
