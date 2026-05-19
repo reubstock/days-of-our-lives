@@ -133,8 +133,17 @@
   /* Title row */
   .title-row {
     flex: 0 0 auto;
-    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 14px;
     padding: 2px 0 0;
+  }
+  .hourglass {
+    height: clamp(28px, 8vw, 44px);
+    width: auto;
+    flex: 0 0 auto;
+    display: block;
   }
   h1 {
     font-size: clamp(28px, 8vw, 44px);
@@ -315,6 +324,18 @@
 <main class="page">
 
   <div class="title-row">
+    <svg class="hourglass" viewBox="0 0 40 60" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <!-- top & bottom caps -->
+      <rect x="0" y="0" width="40" height="3" fill="#000"/>
+      <rect x="0" y="57" width="40" height="3" fill="#000"/>
+      <!-- glass outline: two triangles meeting at the pinch -->
+      <path d="M 4 3 L 36 3 L 22 30 L 36 57 L 4 57 L 18 30 Z"
+            fill="none" stroke="#000" stroke-width="1.8" stroke-linejoin="miter"/>
+      <!-- top sand (half chamber, settling at pinch) -->
+      <path d="M 11 17 L 29 17 L 22 30 L 18 30 Z" fill="#facc15"/>
+      <!-- bottom sand (half chamber, piled on base) -->
+      <path d="M 11 43 L 29 43 L 36 57 L 4 57 Z" fill="#facc15"/>
+    </svg>
     <h1>CARPE DIEM</h1>
   </div>
 
