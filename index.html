@@ -4,14 +4,21 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>CARPE DIEM</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root {
-    --bg: #ffffff;
-    --ink: #000000;
-    --lived: #000000;       /* spent — heavy */
-    --remaining: #ec4899;   /* pink — yet to come */
-    --rule: #000000;
-    --gap: 6px;
+    --bg:         #f5efe2;   /* warm cream paper */
+    --paper:      #ece3d0;   /* slightly deeper cream — section accent */
+    --ink:        #2d2924;   /* warm near-black */
+    --ink-soft:   #7a716b;   /* warm muted ink */
+    --rule:       #d6cdba;   /* soft warm hairline */
+    --lived:      #2d2924;   /* heavy warm ink for spent weeks */
+    --remaining:  #d97757;   /* terracotta — yet to come */
+    --honey:      #c89752;   /* warm honey gold */
+    --sage:       #7a9b94;   /* muted sage / teal */
+    --gap: 10px;
   }
   * { box-sizing: border-box; }
   html, body {
@@ -19,117 +26,23 @@
     padding: 0;
     background: var(--bg);
     color: var(--ink);
-    font-family: "Times New Roman", Times, serif;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+    font-weight: 400;
     -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
     height: 100%;
     overflow: hidden;
     overscroll-behavior: none;
   }
-  body {
-    height: 100dvh;
-  }
+  body { height: 100dvh; }
   .page {
     height: 100dvh;
     max-width: 1180px;
     margin: 0 auto;
-    padding: 10px 14px env(safe-area-inset-bottom) 14px;
+    padding: 14px 18px env(safe-area-inset-bottom) 18px;
     display: flex;
     flex-direction: column;
     gap: var(--gap);
-  }
-
-  /* Top row: prompt (1/3) + meta (2/3) on desktop */
-  .top-row {
-    flex: 0 0 auto;
-    display: flex;
-    align-items: stretch;
-    gap: 14px;
-    flex-wrap: wrap;
-  }
-
-  /* Prompt box */
-  .prompt {
-    border: 3px double var(--rule);
-    padding: 0;
-    flex: 0 1 33%;
-    min-width: 240px;
-    align-self: flex-start;
-    background: var(--bg);
-  }
-  .prompt-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 10px;
-    background: var(--ink);
-    color: var(--bg);
-    padding: 5px 10px;
-  }
-  .prompt-label {
-    font-size: 11px;
-    letter-spacing: 0.22em;
-    text-transform: uppercase;
-    font-weight: 700;
-  }
-  .counter {
-    font-size: 11px;
-    letter-spacing: 0.1em;
-    font-variant-numeric: tabular-nums;
-    color: #fff;
-    opacity: 1;
-  }
-  .counter.warn { font-weight: 700; }
-  .prompt-row {
-    display: flex;
-    align-items: stretch;
-    gap: 0;
-    padding: 8px 10px;
-    border-top: 1px solid var(--rule);
-  }
-  .prompt textarea {
-    flex: 1;
-    border: none;
-    outline: none;
-    resize: none;
-    font-family: inherit;
-    font-size: 17px;  /* >=16 prevents iOS zoom */
-    line-height: 1.3;
-    background: transparent;
-    color: var(--ink);
-    height: 24px;     /* ~1 line at load */
-    max-height: 84px; /* ~3-4 lines max */
-    padding: 0 10px 0 0;
-    overflow-y: auto;
-  }
-  .prompt textarea::placeholder {
-    color: #bdbdbd;
-    font-style: italic;
-  }
-  .send-btn {
-    font-family: inherit;
-    font-size: 10px;
-    letter-spacing: 0.22em;
-    text-transform: uppercase;
-    font-weight: 700;
-    padding: 0 12px;
-    background: var(--ink);
-    color: var(--bg);
-    border: none;
-    cursor: pointer;
-    text-decoration: none;
-    flex: 0 0 auto;
-    line-height: 1;
-    display: inline-flex;
-    align-items: center;
-    align-self: stretch;
-    margin: -8px -10px -8px 0;
-  }
-  .send-btn[aria-disabled="true"] {
-    background: var(--ink);
-    color: var(--bg);
-    opacity: 0.45;
-    cursor: not-allowed;
-    pointer-events: none;
   }
 
   /* Title row */
@@ -138,162 +51,242 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    gap: 14px;
+    gap: 16px;
     padding: 2px 0 0;
   }
   .hourglass {
-    height: clamp(28px, 8vw, 44px);
+    height: clamp(30px, 8vw, 46px);
     width: auto;
     flex: 0 0 auto;
     display: block;
   }
   h1 {
-    font-size: clamp(28px, 8vw, 44px);
-    letter-spacing: 0.24em;
+    font-family: 'Fraunces', 'Inter', serif;
+    font-size: clamp(30px, 8.4vw, 48px);
+    letter-spacing: 0.06em;
     margin: 0;
-    font-weight: 700;
+    font-weight: 500;
     line-height: 1;
-  }
-  .h1-rule {
-    height: 2px;
-    background: var(--ink);
-    margin: 6px 0 0;
+    color: var(--ink);
   }
 
-  /* Controls + readout — sits in the right 2/3 of the top row on desktop */
+  /* Top row: prompt (1/3) + meta (2/3) */
+  .top-row {
+    flex: 0 0 auto;
+    display: flex;
+    align-items: stretch;
+    gap: 18px;
+    flex-wrap: wrap;
+  }
+
+  /* Prompt card — soft paper, no inverse header, no double border */
+  .prompt {
+    flex: 0 1 34%;
+    min-width: 250px;
+    align-self: flex-start;
+    background: var(--paper);
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+    padding: 10px 12px 8px;
+  }
+  .prompt-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 6px;
+    gap: 10px;
+  }
+  .prompt-label {
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    font-weight: 600;
+    color: var(--ink-soft);
+  }
+  .counter {
+    font-size: 11px;
+    letter-spacing: 0.04em;
+    font-variant-numeric: tabular-nums;
+    color: var(--ink-soft);
+  }
+  .counter.warn { color: var(--remaining); font-weight: 600; }
+  .prompt-row {
+    display: flex;
+    align-items: stretch;
+    gap: 8px;
+  }
+  .prompt textarea {
+    flex: 1;
+    border: none;
+    outline: none;
+    resize: none;
+    font-family: inherit;
+    font-size: 17px;
+    line-height: 1.35;
+    background: transparent;
+    color: var(--ink);
+    height: 26px;
+    max-height: 86px;
+    padding: 0;
+    overflow-y: auto;
+  }
+  .prompt textarea::placeholder {
+    color: var(--ink-soft);
+    opacity: 0.6;
+    font-style: italic;
+  }
+  .send-btn {
+    font-family: inherit;
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    font-weight: 600;
+    padding: 0 16px;
+    background: var(--ink);
+    color: var(--bg);
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+    text-decoration: none;
+    flex: 0 0 auto;
+    line-height: 1;
+    display: inline-flex;
+    align-items: center;
+    transition: background-color 120ms ease, opacity 120ms ease;
+  }
+  .send-btn:hover { background: var(--remaining); }
+  .send-btn[aria-disabled="true"] {
+    background: var(--ink);
+    color: var(--bg);
+    opacity: 0.35;
+    cursor: not-allowed;
+    pointer-events: none;
+  }
+
+  /* Controls + readout — sits in the right 2/3 of the top row */
   .meta {
     flex: 1 1 auto;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 10px;
+    gap: 14px;
     flex-wrap: wrap;
     min-width: 0;
   }
-  .controls {
-    display: flex;
-    gap: 8px;
-    align-items: center;
-  }
-  .field { display: flex; align-items: center; gap: 5px; }
+  .controls { display: flex; gap: 14px; align-items: center; }
+  .field { display: flex; align-items: center; gap: 8px; }
   .field label {
-    font-size: 10px;
-    letter-spacing: 0.18em;
+    font-size: 11px;
+    letter-spacing: 0.14em;
     text-transform: uppercase;
-    opacity: 0.6;
+    font-weight: 500;
+    color: var(--ink-soft);
   }
   .field input[type="number"],
   .field select {
     font-family: inherit;
-    font-size: 14px;
-    padding: 3px 6px;
+    font-size: 15px;
+    padding: 5px 8px;
     border: 1px solid var(--rule);
     background: var(--bg);
     color: var(--ink);
+    border-radius: 3px;
+    outline: none;
   }
-  .field input[type="number"] { width: 58px; }
-  .field select { width: 92px; }
+  .field input[type="number"]:focus,
+  .field select:focus { border-color: var(--ink); }
+  .field input[type="number"] { width: 62px; }
+  .field select { width: 96px; }
 
-  .age-col { display: flex; flex-direction: column; align-items: flex-start; gap: 3px; }
+  .age-col { display: flex; flex-direction: column; align-items: flex-start; gap: 4px; }
   .attribution {
-    font-size: 9px;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    opacity: 0.6;
+    font-size: 10px;
+    letter-spacing: 0.04em;
+    color: var(--ink-soft);
     white-space: nowrap;
   }
-  .attribution a { color: inherit; text-decoration: underline; }
-  .attribution a:hover { color: var(--ink); opacity: 1; }
+  .attribution a {
+    color: var(--ink);
+    text-decoration: none;
+    border-bottom: 1px solid var(--rule);
+  }
+  .attribution a:hover { border-bottom-color: var(--remaining); color: var(--remaining); }
 
   .readout {
-    font-size: 11px;
-    letter-spacing: 0.04em;
-    opacity: 0.85;
+    font-size: 12px;
+    color: var(--ink-soft);
     text-align: right;
     flex: 1 1 auto;
     min-width: 0;
   }
-  .readout .num { font-weight: 700; }
+  .readout .num { color: var(--ink); font-weight: 600; font-variant-numeric: tabular-nums; }
+
   .legend {
     display: inline-flex;
-    gap: 14px;
+    gap: 16px;
     align-items: center;
-    font-size: 15px;
-    letter-spacing: 0.14em;
+    font-size: 12px;
+    letter-spacing: 0.1em;
     text-transform: uppercase;
-    font-weight: 700;
-    opacity: 1;
+    font-weight: 500;
+    color: var(--ink-soft);
   }
   .legend i {
     display: inline-block;
-    width: 14px;
-    height: 14px;
+    width: 11px;
+    height: 11px;
     margin-right: 6px;
-    vertical-align: -2px;
+    vertical-align: -1px;
+    border-radius: 1px;
   }
   .swatch-lived { background: var(--lived); }
   .swatch-left { background: var(--remaining); }
 
-  /* Stats strip — three counts of things remaining */
+  /* Stats strip — harmonious trio of muted accents */
   .stats {
     flex: 0 0 auto;
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 10px;
+    gap: 14px;
     border-top: 1px solid var(--rule);
     border-bottom: 1px solid var(--rule);
-    padding: 6px 0;
+    padding: 10px 0 8px;
   }
   .stat { text-align: center; min-width: 0; }
   .stat-num {
-    font-size: clamp(20px, 4.4vw, 34px);
-    font-weight: 700;
-    color: var(--remaining);
+    font-family: 'Fraunces', 'Inter', serif;
+    font-size: clamp(24px, 4.8vw, 36px);
+    font-weight: 500;
     font-variant-numeric: tabular-nums;
     line-height: 1.05;
-    letter-spacing: 0.01em;
-  }
-  #fartsNum  { color: #8b4513; }  /* brown */
-  #sexNum    { color: #d62828; }  /* red */
-  #dreamsNum {
-    background: linear-gradient(90deg,
-      #ff2d55, #ff8c00, #ffcc00, #34c759, #00b8d4, #4361ee, #b10dc9, #ff2d55);
-    background-size: 200% 100%;
-    -webkit-background-clip: text;
-            background-clip: text;
-    -webkit-text-fill-color: transparent;
-            color: transparent;
-    animation: rainbow 6s linear infinite;
-  }
-  @keyframes rainbow {
-    from { background-position: 0% 0; }
-    to   { background-position: -200% 0; }
-  }
-  @media (prefers-reduced-motion: reduce) {
-    #dreamsNum { animation: none; }
+    letter-spacing: 0.005em;
   }
   .stat-label {
-    font-size: 9px;
-    letter-spacing: 0.22em;
+    font-size: 10px;
+    letter-spacing: 0.18em;
     text-transform: uppercase;
-    opacity: 0.7;
-    margin-top: 3px;
+    font-weight: 600;
+    color: var(--ink-soft);
+    margin-top: 4px;
   }
   .stat-sub {
-    font-size: 8px;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    opacity: 0.4;
-    margin-top: 1px;
+    font-size: 10px;
+    letter-spacing: 0.02em;
+    color: var(--ink-soft);
+    opacity: 0.75;
+    margin-top: 2px;
+    font-style: italic;
   }
+  #fartsNum  { color: var(--honey); }
+  #sexNum    { color: var(--remaining); }
+  #dreamsNum { color: var(--sage); }
 
-  /* Grid — fills remaining space in BOTH dimensions (rectangles, not squares) */
+  /* Grid — fills remaining space in both dimensions */
   .grid-wrap {
     flex: 1 1 auto;
     min-height: 0;
     overflow: hidden;
-    border-top: 1px solid var(--rule);
-    padding-top: 6px;
+    padding-top: 4px;
   }
   .grid {
     display: grid;
@@ -304,22 +297,14 @@
   }
   .cell { background: var(--bg); min-width: 0; min-height: 0; }
   .cell.lived { background: var(--lived); }
-  .cell.left { background: var(--remaining); }
+  .cell.left  { background: var(--remaining); }
 
-  /* Very small phones */
+  /* Small phones */
   @media (max-height: 640px) {
-    :root { --gap: 4px; }
-    .page { padding: 6px 10px; }
-    .prompt { padding: 6px 8px; }
-    h1 { font-size: clamp(18px, 6vw, 28px); }
-    .grid-wrap { padding-top: 4px; }
-  }
-  @media (min-width: 700px) {
-    .prompt { padding: 12px 14px; }
-    .prompt-label, .counter { font-size: 11px; }
-    .prompt textarea { font-size: 18px; height: 24px; }
-    .field input[type="number"], .field select { font-size: 16px; padding: 5px 8px; }
-    .readout { font-size: 12px; }
+    :root { --gap: 7px; }
+    .page { padding: 10px 14px; }
+    .prompt { padding: 8px 10px 6px; }
+    h1 { font-size: clamp(24px, 7vw, 34px); }
   }
 </style>
 </head>
@@ -328,18 +313,14 @@
 
   <div class="title-row">
     <svg class="hourglass" viewBox="0 0 40 60" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-      <!-- top & bottom caps -->
-      <rect x="0" y="0" width="40" height="3" fill="#000"/>
-      <rect x="0" y="57" width="40" height="3" fill="#000"/>
-      <!-- glass outline: two triangles meeting at the pinch -->
+      <rect x="0" y="0" width="40" height="3" fill="#2d2924"/>
+      <rect x="0" y="57" width="40" height="3" fill="#2d2924"/>
       <path d="M 4 3 L 36 3 L 22 30 L 36 57 L 4 57 L 18 30 Z"
-            fill="none" stroke="#000" stroke-width="1.8" stroke-linejoin="miter"/>
-      <!-- top sand (half chamber, settling at pinch) -->
-      <path d="M 11 17 L 29 17 L 22 30 L 18 30 Z" fill="#facc15"/>
-      <!-- bottom sand (half chamber, piled on base) -->
-      <path d="M 11 43 L 29 43 L 36 57 L 4 57 Z" fill="#facc15"/>
+            fill="none" stroke="#2d2924" stroke-width="1.6" stroke-linejoin="miter"/>
+      <path d="M 11 17 L 29 17 L 22 30 L 18 30 Z" fill="#d97757"/>
+      <path d="M 11 43 L 29 43 L 36 57 L 4 57 Z" fill="#d97757"/>
     </svg>
-    <h1>CARPE DIEM</h1>
+    <h1>Carpe Diem</h1>
   </div>
 
   <div class="top-row">
@@ -349,7 +330,7 @@
         <div class="counter" id="counter">0 / 180</div>
       </div>
       <div class="prompt-row">
-        <textarea id="today" rows="1" maxlength="180" placeholder="Seize it…" spellcheck="false"></textarea>
+        <textarea id="today" rows="1" maxlength="180" placeholder="seize it…" spellcheck="false"></textarea>
         <a id="sendBtn" class="send-btn" aria-disabled="true" href="#">Send</a>
       </div>
     </section>
@@ -362,7 +343,7 @@
             <input id="age" type="number" min="0" max="119" step="1" value="30">
           </div>
           <div class="attribution">
-            Life Expectancy Calculated by <a href="https://www.health.state.ny.us/health_care/medicaid/publications/docs/adm/06adm-5att8.pdf" target="_blank" rel="noopener noreferrer">NY Health Dept</a>
+            Life Expectancy calculated by <a href="https://www.health.state.ny.us/health_care/medicaid/publications/docs/adm/06adm-5att8.pdf" target="_blank" rel="noopener noreferrer">NY Health Dept</a>
           </div>
         </div>
         <div class="field">
@@ -445,12 +426,9 @@
   const dreamsNumEl = document.getElementById('dreamsNum');
   const sexNumEl = document.getElementById('sexNum');
   const sexSubEl = document.getElementById('sexSub');
+  const MAX_CHARS = 180;
+  const RECIPIENT = 'reubstock@gmail.com';
 
-  // Per-year sex frequency by age bracket (Kinsey-ish public averages):
-  //   18–29: ~2.5/wk = 130/yr
-  //   30–49: ~1.5/wk =  78/yr
-  //   50+  : ~3/mo   =  36/yr
-  //   <18  : 0 (not counted)
   function sexFreqPerYear(a) {
     if (a < 18) return 0;
     if (a < 30) return 2.5 * 52;
@@ -460,7 +438,7 @@
   function sexLeft(currentAge, remainingYears) {
     let total = 0;
     let a = currentAge;
-    let end = currentAge + remainingYears;
+    const end = currentAge + remainingYears;
     while (a < end) {
       const chunk = Math.min(1, end - a);
       total += sexFreqPerYear(Math.floor(a)) * chunk;
@@ -468,8 +446,6 @@
     }
     return Math.round(total);
   }
-  const MAX_CHARS = 180;
-  const RECIPIENT = 'reubstock@gmail.com';
 
   function clampAge(v) {
     v = Math.floor(Number(v));
@@ -491,7 +467,6 @@
       `<span class="legend"><span><i class="swatch-lived"></i>lived</span><span><i class="swatch-left"></i>left</span></span> ` +
       `&nbsp; <span class="num">${weeksLeft.toLocaleString()}</span> weeks (<span class="num">${remainingYears.toFixed(1)}</span> yrs) to go`;
 
-    // Stats: counts based on time remaining
     const daysLeft = remainingYears * 365.25;
     fartsNumEl.textContent = Math.round(daysLeft * 10).toLocaleString();
     dreamsNumEl.textContent = Math.round(daysLeft * 5).toLocaleString();
