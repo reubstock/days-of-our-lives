@@ -72,12 +72,13 @@
     font-weight: 700;
   }
   .counter {
-    font-size: 10px;
+    font-size: 11px;
     letter-spacing: 0.1em;
     font-variant-numeric: tabular-nums;
-    opacity: 0.7;
+    color: #fff;
+    opacity: 1;
   }
-  .counter.warn { opacity: 1; font-weight: 700; }
+  .counter.warn { font-weight: 700; }
   .prompt-row {
     display: flex;
     align-items: stretch;
@@ -124,8 +125,9 @@
     margin: -8px -10px -8px 0;
   }
   .send-btn[aria-disabled="true"] {
-    background: #e6e6e6;
-    color: #999;
+    background: var(--ink);
+    color: var(--bg);
+    opacity: 0.45;
     cursor: not-allowed;
     pointer-events: none;
   }
@@ -192,13 +194,13 @@
   .field input[type="number"] { width: 58px; }
   .field select { width: 92px; }
 
-  .age-col { display: flex; flex-direction: column; align-items: flex-start; gap: 2px; }
+  .age-col { display: flex; flex-direction: column; align-items: flex-start; gap: 3px; }
   .attribution {
     font-size: 9px;
-    letter-spacing: 0.12em;
+    letter-spacing: 0.08em;
     text-transform: uppercase;
-    opacity: 0.55;
-    margin-left: 36px; /* roughly under the input, past the "Age" label */
+    opacity: 0.6;
+    white-space: nowrap;
   }
   .attribution a { color: inherit; text-decoration: underline; }
   .attribution a:hover { color: var(--ink); opacity: 1; }
@@ -214,19 +216,20 @@
   .readout .num { font-weight: 700; }
   .legend {
     display: inline-flex;
-    gap: 10px;
+    gap: 14px;
     align-items: center;
-    font-size: 10px;
-    letter-spacing: 0.1em;
+    font-size: 15px;
+    letter-spacing: 0.14em;
     text-transform: uppercase;
-    opacity: 0.7;
+    font-weight: 700;
+    opacity: 1;
   }
   .legend i {
     display: inline-block;
-    width: 9px;
-    height: 9px;
-    margin-right: 4px;
-    vertical-align: -1px;
+    width: 14px;
+    height: 14px;
+    margin-right: 6px;
+    vertical-align: -2px;
   }
   .swatch-lived { background: var(--lived); }
   .swatch-left { background: var(--remaining); }
@@ -359,7 +362,7 @@
             <input id="age" type="number" min="0" max="119" step="1" value="30">
           </div>
           <div class="attribution">
-            Life Expectancy <a href="https://www.health.state.ny.us/health_care/medicaid/publications/docs/adm/06adm-5att8.pdf" target="_blank" rel="noopener noreferrer">via</a>
+            Life Expectancy Calculated by <a href="https://www.health.state.ny.us/health_care/medicaid/publications/docs/adm/06adm-5att8.pdf" target="_blank" rel="noopener noreferrer">NY Health Dept</a>
           </div>
         </div>
         <div class="field">
